@@ -121,7 +121,6 @@ const ClickSpark = ({
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Dynamically retrieve the current `--main-color` value from document root computed styles
     let activeColor = '#fff';
     try {
       if (sparkColor.startsWith('var(')) {

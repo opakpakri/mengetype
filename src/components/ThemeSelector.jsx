@@ -21,11 +21,10 @@ export default function ThemeSelector({ activeTheme, setTheme, inline = false, l
           <button
             key={theme.id}
             onClick={() => setTheme(theme.id)}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs transition-all duration-200 border cursor-pointer ${
-              activeTheme === theme.id
+            className={`flex items-center gap-1.5 px-3 py-1 rounded text-xs transition-all duration-200 border cursor-pointer ${activeTheme === theme.id
                 ? 'border-main text-main bg-main/10 font-semibold shadow-xs'
                 : 'border-transparent text-sub hover:text-txt hover:bg-sub/10'
-            }`}
+              }`}
           >
             <span
               className="w-2.5 h-2.5 rounded-full inline-block border border-black/10"
@@ -44,19 +43,17 @@ export default function ThemeSelector({ activeTheme, setTheme, inline = false, l
         <Palette size={14} />
         <span className="capitalize">Theme: {activeTheme}</span>
       </button>
-      
-      {/* Dropdown panel */}
+
       <div className="absolute bottom-full right-0 mb-2 w-48 glass rounded-lg shadow-xl border border-sub/20 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50 p-2 flex flex-col gap-1">
         <div className="text-[10px] uppercase font-bold text-sub px-2 py-1 mb-1 tracking-wider border-b border-sub/10">{t.selectTheme}</div>
         {THEMES.map((theme) => (
           <button
             key={theme.id}
             onClick={() => setTheme(theme.id)}
-            className={`flex items-center justify-between w-full px-2 py-1.5 rounded text-xs text-left transition-all cursor-pointer ${
-              activeTheme === theme.id
+            className={`flex items-center justify-between w-full px-2 py-1.5 rounded text-xs text-left transition-all cursor-pointer ${activeTheme === theme.id
                 ? 'bg-main/15 text-main font-semibold'
                 : 'text-sub hover:text-txt hover:bg-sub/10'
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2">
               <div className="flex gap-0.5">

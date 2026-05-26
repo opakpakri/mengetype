@@ -69,7 +69,7 @@
   --color-err: var(--error-color);
   --color-err-bg: var(--error-bg-color);
   --color-caret: var(--caret-color);
-  
+
   --font-sans: 'Lexend Deca', sans-serif;
   --font-mono: 'Space Mono', monospace;
 }
@@ -85,9 +85,12 @@ body {
 
 /* Caret blinking animation */
 @keyframes caretBlink {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }

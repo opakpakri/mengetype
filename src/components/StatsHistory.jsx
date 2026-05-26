@@ -8,11 +8,11 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
   const formatDate = (timestamp) => {
     try {
       const date = new Date(timestamp);
-      return date.toLocaleDateString(undefined, { 
-        month: 'short', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      return date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       });
     } catch (e) {
       return 'Unknown date';
@@ -38,7 +38,6 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-6 animate-fadeIn">
-      {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-txt flex items-center gap-2">
@@ -47,7 +46,7 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
           </h2>
           <p className="text-sm text-sub mt-1">{t.historySub}</p>
         </div>
-        
+
         <div className="flex gap-2">
           {history.length > 0 && (
             <button
@@ -88,7 +87,6 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
         </div>
       ) : (
         <div className="space-y-6">
-          {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="glass rounded-xl p-4 border border-sub/10 flex items-center justify-between">
               <div>
@@ -99,7 +97,7 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
                 <Award size={24} />
               </div>
             </div>
-            
+
             <div className="glass rounded-xl p-4 border border-sub/10 flex items-center justify-between">
               <div>
                 <div className="text-xs text-sub uppercase tracking-wider font-semibold">{t.avgWpm}</div>
@@ -121,7 +119,6 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
             </div>
           </div>
 
-          {/* History List */}
           <div className="glass rounded-xl border border-sub/10 overflow-hidden">
             <div className="overflow-x-auto max-h-[350px] overflow-y-auto">
               <table className="w-full text-left border-collapse">
@@ -137,8 +134,8 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
                 </thead>
                 <tbody className="divide-y divide-sub/10 font-mono text-sm">
                   {history.slice().reverse().map((item, index) => (
-                    <tr 
-                      key={item.id || index} 
+                    <tr
+                      key={item.id || index}
                       className="hover:bg-sub/5 transition-colors text-txt"
                     >
                       <td className="py-3.5 px-4 sm:px-6 text-sub font-sans flex items-center gap-2">

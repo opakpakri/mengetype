@@ -18,12 +18,10 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
 
   const [hoveredPoint, setHoveredPoint] = useState(null);
 
-  // SVG Chart Dimensions
   const chartWidth = 700;
   const chartHeight = 200;
   const padding = { top: 20, right: 30, bottom: 30, left: 40 };
 
-  // Calculate Chart Boundaries
   const chartData = wpmOverTime.length > 0 ? wpmOverTime : [
     { second: 0, wpm: 0, rawWpm: 0, errors: 0 },
     { second: timeSpent, wpm: wpm, rawWpm: rawWpm, errors: incorrectChars }
@@ -44,25 +42,21 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
     return chartHeight - padding.bottom - (val / maxY) * (chartHeight - padding.top - padding.bottom);
   };
 
-  // Generate SVG Path for WPM
   const wpmPoints = chartData.map(d => `${getX(d.second)},${getY(d.wpm)}`).join(' ');
   const rawWpmPoints = chartData.map(d => `${getX(d.second)},${getY(d.rawWpm)}`).join(' ');
 
-  // Create area path under WPM line
-  const areaPath = chartData.length > 0 
-    ? `M ${getX(0)},${getY(0)} ` + 
-      chartData.map(d => `L ${getX(d.second)},${getY(d.wpm)}`).join(' ') + 
-      ` L ${getX(maxX)},${getY(0)} Z`
+  const areaPath = chartData.length > 0
+    ? `M ${getX(0)},${getY(0)} ` +
+    chartData.map(d => `L ${getX(d.second)},${getY(d.wpm)}`).join(' ') +
+    ` L ${getX(maxX)},${getY(0)} Z`
     : '';
 
-  // Grid line values
   const gridLines = [];
   const gridCount = 4;
   for (let i = 1; i <= gridCount; i++) {
     gridLines.push(Math.round((maxY / gridCount) * i));
   }
 
-  // Get dynamic feedback based on WPM
   const getFeedbackMessage = () => {
     if (wpm >= 90) return { title: t.bestWpmMsg, text: t.bestWpmSub, icon: <Flame className="text-main" size={24} /> };
     if (wpm >= 65) return { title: t.goodWpmMsg, text: t.goodWpmSub, icon: <ThumbsUp className="text-main" size={24} /> };
@@ -74,10 +68,8 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-6 animate-fadeIn">
-      {/* Upper Layout: WPM, Accuracy, and Feedback */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        
-        {/* Main Stats Block */}
+
         <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="glass rounded-2xl p-5 border border-sub/10 flex flex-col justify-between">
             <span className="text-xs text-sub uppercase font-bold tracking-wider">{t.wpm}</span>
@@ -125,7 +117,6 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
           </div>
         </div>
 
-        {/* Dynamic Coach Card */}
         <div className="glass rounded-2xl p-5 border border-sub/10 flex flex-col justify-between relative overflow-hidden bg-main/5">
           <div className="absolute -top-12 -right-12 w-28 h-28 bg-main/10 rounded-full blur-2xl pointer-events-none"></div>
           <div className="flex items-center gap-2 mb-3">
@@ -144,10 +135,9 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
         </div>
       </div>
 
-      {/* Interactive Chart */}
       <div className="glass rounded-2xl p-5 border border-sub/10 mb-8 relative overflow-hidden">
         <h3 className="text-xs text-sub uppercase font-bold tracking-wider mb-4">{t.chartTitle}</h3>
-        
+
         <div className="w-full overflow-x-auto">
           <div style={{ minWidth: `${chartWidth}px` }} className="relative">
             <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} className="w-full select-none">
@@ -158,23 +148,22 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                 </linearGradient>
               </defs>
 
-              {/* Grid Lines */}
               {gridLines.map((val, idx) => (
                 <g key={idx}>
-                  <line 
-                    x1={padding.left} 
-                    y1={getY(val)} 
-                    x2={chartWidth - padding.right} 
-                    y2={getY(val)} 
-                    stroke="var(--sub-color)" 
-                    strokeOpacity="0.1" 
+                  <line
+                    x1={padding.left}
+                    y1={getY(val)}
+                    x2={chartWidth - padding.right}
+                    y2={getY(val)}
+                    stroke="var(--sub-color)"
+                    strokeOpacity="0.1"
                     strokeDasharray="3 3"
                   />
-                  <text 
-                    x={padding.left - 8} 
-                    y={getY(val) + 4} 
-                    fill="var(--sub-color)" 
-                    fontSize="10" 
+                  <text
+                    x={padding.left - 8}
+                    y={getY(val) + 4}
+                    fill="var(--sub-color)"
+                    fontSize="10"
                     textAnchor="end"
                     fontFamily="Space Mono"
                     opacity="0.6"
@@ -184,7 +173,6 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                 </g>
               ))}
 
-              {/* X Axis labels */}
               {chartData.filter((_, idx) => idx === 0 || idx === chartData.length - 1 || idx % Math.max(1, Math.round(chartData.length / 5)) === 0).map((d, idx) => (
                 <text
                   key={idx}
@@ -200,15 +188,12 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                 </text>
               ))}
 
-              {/* Area filled graph */}
               {wpmOverTime.length > 1 && (
                 <path d={areaPath} fill="url(#wpmAreaGrad)" />
               )}
 
-              {/* Lines */}
               {wpmOverTime.length > 1 ? (
                 <>
-                  {/* Raw WPM */}
                   <polyline
                     fill="none"
                     stroke="var(--sub-color)"
@@ -218,7 +203,6 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                     points={rawWpmPoints}
                   />
 
-                  {/* WPM */}
                   <polyline
                     fill="none"
                     stroke="var(--main-color)"
@@ -237,7 +221,6 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                 />
               )}
 
-              {/* Error markers */}
               {chartData.map((d, idx) => {
                 if (d.errors > 0) {
                   return (
@@ -254,9 +237,8 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                 return null;
               })}
 
-              {/* Interactive Tooltip Hotspots */}
               {chartData.map((d, idx) => (
-                <g 
+                <g
                   key={idx}
                   className="cursor-pointer"
                   onMouseEnter={() => setHoveredPoint(d)}
@@ -282,13 +264,12 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
               ))}
             </svg>
 
-            {/* Live Tooltip details */}
             {hoveredPoint && (
-              <div 
+              <div
                 className="absolute z-20 glass px-2.5 py-1.5 rounded-md text-[10px] font-mono border border-sub/20 pointer-events-none transition-all duration-100 shadow-md"
-                style={{ 
-                  left: `${getX(hoveredPoint.second) - 60}px`, 
-                  top: `${getY(hoveredPoint.wpm) - 60}px` 
+                style={{
+                  left: `${getX(hoveredPoint.second) - 60}px`,
+                  top: `${getY(hoveredPoint.wpm) - 60}px`
                 }}
               >
                 <div className="text-[9px] text-sub uppercase font-semibold">{t.tooltipSec} {hoveredPoint.second}</div>
@@ -299,8 +280,7 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
             )}
           </div>
         </div>
-        
-        {/* Legend */}
+
         <div className="flex justify-center items-center gap-6 mt-3 text-[10px] text-sub font-mono">
           <div className="flex items-center gap-1.5">
             <span className="w-4 h-0.5 bg-main inline-block"></span>
@@ -317,7 +297,6 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
         </div>
       </div>
 
-      {/* Control Buttons */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button
           onClick={onRestart}
