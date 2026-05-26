@@ -46,7 +46,7 @@ export default function Navbar({ config, setConfig, activeView, setActiveView, h
         }`}
       >
         <Keyboard size={isMobile ? 14 : 16} />
-        <span>{t.navStartTest}</span>
+        <span className="hidden md:inline">{t.navStartTest}</span>
       </button>
 
       <button
@@ -58,7 +58,7 @@ export default function Navbar({ config, setConfig, activeView, setActiveView, h
         }`}
       >
         <History size={isMobile ? 14 : 16} />
-        <span>{t.navHistory}</span>
+        <span className="hidden md:inline">{t.navHistory}</span>
         {historyCount > 0 && (
           <span className="absolute -top-1 -right-1 px-1.5 py-0.2 text-[8px] sm:text-[9px] font-bold bg-main text-bg rounded-full border border-bg">
             {historyCount}
