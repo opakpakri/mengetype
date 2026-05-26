@@ -130,7 +130,7 @@ function App() {
       </main>
 
       {/* Footer Branding & Quick Palette Toggles */}
-      <Footer activeTheme={theme} setTheme={setTheme} />
+      <Footer activeTheme={theme} setTheme={setTheme} language={config.language} />
     </div>
   );
 }

@@ -1,5 +1,16 @@
 export const TRANSLATIONS = {
   english: {
+    // Navbar
+    navStartTest: 'Start Test',
+    navHistory: 'History',
+    navTimeMode: 'time',
+    navWordMode: 'words',
+    
+    // Footer
+    footerCredits: 'made with React & Tailwind v4',
+    selectTheme: 'Select Theme',
+
+    // TypingTest
     wordsLabel: 'words',
     muteSound: 'Mute Sound',
     unmuteSound: 'Unmute Sound',
@@ -8,16 +19,31 @@ export const TRANSLATIONS = {
     focusLost: 'Keyboard focus lost',
     tabKey: 'Tab',
     restartTip: 'to restart the typing test',
+
+    // Results
+    wpm: 'wpm',
+    accuracy: 'accuracy',
+    time: 'time',
+    characters: 'characters',
+    rawWpmLabel: 'Raw WPM:',
+    errorsLabel: 'Errors:',
+    duration: 'test duration',
     correct: 'Correct',
     incorrect: 'Incorrect',
     extra: 'Extra',
     missed: 'Missed',
-    characters: 'characters',
-    time: 'time',
-    duration: 'duration',
-    wpm: 'wpm',
-    accuracy: 'accuracy',
-    consistency: 'consistency',
+    resultsSubtitle: 'typing breakdown',
+    consistency: 'Consistency',
+    chartTitle: 'Speed (WPM) & Error Chart',
+    actualWpm: 'Actual WPM',
+    rawWpm: 'Raw WPM',
+    errors: 'Typing Errors',
+    repeatAction: 'Restart Test',
+    tooltipSec: 'Sec',
+    tooltipRaw: 'Raw',
+    tooltipError: 'Error',
+
+    // StatsHistory
     historyTitle: 'Typing Test History',
     historySub: 'Track your typing progression over time',
     clearHistory: 'Clear History',
@@ -28,15 +54,16 @@ export const TRANSLATIONS = {
     highestWpm: 'Highest WPM',
     avgWpm: 'Average WPM',
     avgAccuracy: 'Average Accuracy',
-    chartTitle: 'Speed (WPM) & Error Chart',
-    actualWpm: 'Actual WPM',
-    rawWpm: 'Raw WPM',
-    errors: 'Errors',
-    repeatAction: 'Restart Test',
-    resultsSubtitle: 'typing breakdown',
     dateLabel: 'Date',
     modeLabel: 'Mode',
     languageLabel: 'Language',
+    confirmClear: 'Are you sure you want to delete all test history?',
+    timeModeName: 'Time',
+    wordModeName: 'Words',
+    langEnglish: 'English',
+    langIndonesian: 'Indonesian',
+
+    // Coach Feedback
     bestWpmMsg: 'Typing God!',
     bestWpmSub: 'Outstanding! Your speed is equivalent to a professional typist.',
     goodWpmMsg: 'Great Job!',
@@ -47,6 +74,17 @@ export const TRANSLATIONS = {
     tryAgainSub: 'Focus on accuracy first, speed will follow naturally.'
   },
   indonesian: {
+    // Navbar
+    navStartTest: 'Mulai Tes',
+    navHistory: 'Riwayat',
+    navTimeMode: 'waktu',
+    navWordMode: 'kata',
+
+    // Footer
+    footerCredits: 'dibuat dengan React & Tailwind v4',
+    selectTheme: 'Pilih Tema',
+
+    // TypingTest
     wordsLabel: 'kata',
     muteSound: 'Matikan Suara',
     unmuteSound: 'Aktifkan Suara',
@@ -55,16 +93,31 @@ export const TRANSLATIONS = {
     focusLost: 'Fokus keyboard terputus',
     tabKey: 'Tab',
     restartTip: 'untuk merestart tes mengetik',
+
+    // Results
+    wpm: 'wpm',
+    accuracy: 'akurasi',
+    time: 'waktu',
+    characters: 'karakter',
+    rawWpmLabel: 'Raw WPM:',
+    errorsLabel: 'Kesalahan:',
+    duration: 'durasi tes',
     correct: 'Benar',
     incorrect: 'Salah',
     extra: 'Lebih',
     missed: 'Terlewat',
-    characters: 'karakter',
-    time: 'waktu',
-    duration: 'durasi tes',
-    wpm: 'wpm',
-    accuracy: 'akurasi',
-    consistency: 'konsistensi',
+    resultsSubtitle: 'breakdown ketikan',
+    consistency: 'Konsistensi',
+    chartTitle: 'Grafik Kecepatan (WPM) & Kesalahan',
+    actualWpm: 'WPM Aktual',
+    rawWpm: 'WPM Mentah (Raw)',
+    errors: 'Kesalahan Ketik',
+    repeatAction: 'Ulangi Tes Baru',
+    tooltipSec: 'Detik',
+    tooltipRaw: 'Mentah',
+    tooltipError: 'Error',
+
+    // StatsHistory
     historyTitle: 'Riwayat Hasil Mengetik',
     historySub: 'Pantau perkembangan performa Anda seiring waktu',
     clearHistory: 'Hapus Riwayat',
@@ -75,18 +128,19 @@ export const TRANSLATIONS = {
     highestWpm: 'WPM Tertinggi',
     avgWpm: 'Rata-Rata WPM',
     avgAccuracy: 'Rata-Rata Akurasi',
-    chartTitle: 'Grafik Kecepatan (WPM) & Kesalahan',
-    actualWpm: 'WPM Aktual',
-    rawWpm: 'WPM Mentah (Raw)',
-    errors: 'Kesalahan Ketik',
-    repeatAction: 'Ulangi Tes Baru',
-    resultsSubtitle: 'breakdown ketikan',
     dateLabel: 'Tanggal',
     modeLabel: 'Mode',
     languageLabel: 'Bahasa',
+    confirmClear: 'Apakah Anda yakin ingin menghapus semua riwayat tes?',
+    timeModeName: 'Waktu',
+    wordModeName: 'Kata',
+    langEnglish: 'English',
+    langIndonesian: 'Indonesia',
+
+    // Coach Feedback
     bestWpmMsg: 'Dewa Mengetik!',
     bestWpmSub: 'Luar biasa! Kecepatan Anda setara dengan profesional papan atas.',
-    goodWpmMsg: 'Luar Bisa!',
+    goodWpmMsg: 'Luar Biasa!',
     goodWpmSub: 'Kecepatan yang sangat bagus. Anda jauh di atas rata-rata orang umum.',
     okWpmMsg: 'Kerja Bagus!',
     okWpmSub: 'Performa yang solid. Terus berlatih untuk menembus batas baru.',

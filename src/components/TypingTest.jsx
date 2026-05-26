@@ -449,7 +449,7 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col items-center">
+    <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
       
       {/* Hidden Interactive Text Input for Focus */}
       <input

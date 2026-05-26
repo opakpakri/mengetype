@@ -37,7 +37,7 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 animate-fadeIn">
+    <div className="w-full max-w-6xl mx-auto p-4 md:p-6 animate-fadeIn">
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
@@ -52,7 +52,7 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
           {history.length > 0 && (
             <button
               onClick={() => {
-                if (window.confirm("Apakah Anda yakin ingin menghapus semua riwayat tes?")) {
+                if (window.confirm(t.confirmClear)) {
                   clearHistory();
                 }
               }}
@@ -149,10 +149,10 @@ export default function StatsHistory({ history = [], clearHistory, onClose, lang
                       <td className="py-3.5 px-4 text-center">{item.accuracy}%</td>
                       <td className="py-3.5 px-4 text-center text-sub">{item.rawWpm || item.wpm}</td>
                       <td className="py-3.5 px-4 text-center text-sub capitalize font-sans text-xs">
-                        {item.modeType === 'time' ? `Waktu (${item.modeValue}s)` : `Kata (${item.modeValue})`}
+                        {item.modeType === 'time' ? `${t.timeModeName} (${item.modeValue}s)` : `${t.wordModeName} (${item.modeValue})`}
                       </td>
                       <td className="py-3.5 px-4 text-center text-sub capitalize font-sans text-xs">
-                        {item.language === 'indonesian' ? 'Indonesia' : 'English'}
+                        {item.language === 'indonesian' ? t.langIndonesian : t.langEnglish}
                       </td>
                     </tr>
                   ))}

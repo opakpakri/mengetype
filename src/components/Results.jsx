@@ -73,7 +73,7 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
   const feedback = getFeedbackMessage();
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 animate-fadeIn">
+    <div className="w-full max-w-6xl mx-auto p-4 md:p-6 animate-fadeIn">
       {/* Upper Layout: WPM, Accuracy, and Feedback */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         
@@ -83,7 +83,7 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
             <span className="text-xs text-sub uppercase font-bold tracking-wider">{t.wpm}</span>
             <span className="text-5xl md:text-6xl font-black text-main font-mono leading-none my-2">{Math.round(wpm)}</span>
             <span className="text-[10px] text-sub flex items-center gap-1 font-sans">
-              Raw WPM: <strong className="text-txt font-mono">{Math.round(rawWpm)}</strong>
+              {t.rawWpmLabel} <strong className="text-txt font-mono">{Math.round(rawWpm)}</strong>
             </span>
           </div>
 
@@ -91,7 +91,7 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
             <span className="text-xs text-sub uppercase font-bold tracking-wider">{t.accuracy}</span>
             <span className="text-5xl md:text-6xl font-black text-txt font-mono leading-none my-2">{Math.round(accuracy)}%</span>
             <span className="text-[10px] text-sub flex items-center gap-1 font-sans">
-              {t.errors}: <strong className="text-err font-mono">{incorrectChars}</strong>
+              {t.errorsLabel} <strong className="text-err font-mono">{incorrectChars}</strong>
             </span>
           </div>
 
@@ -291,10 +291,10 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
                   top: `${getY(hoveredPoint.wpm) - 60}px` 
                 }}
               >
-                <div className="text-[9px] text-sub uppercase font-semibold">Sec {hoveredPoint.second}</div>
+                <div className="text-[9px] text-sub uppercase font-semibold">{t.tooltipSec} {hoveredPoint.second}</div>
                 <div className="font-bold text-main">WPM: {hoveredPoint.wpm}</div>
-                <div className="text-txt">Raw: {hoveredPoint.rawWpm}</div>
-                {hoveredPoint.errors > 0 && <div className="text-err font-semibold">Error: {hoveredPoint.errors}</div>}
+                <div className="text-txt">{t.tooltipRaw}: {hoveredPoint.rawWpm}</div>
+                {hoveredPoint.errors > 0 && <div className="text-err font-semibold">{t.tooltipError}: {hoveredPoint.errors}</div>}
               </div>
             )}
           </div>

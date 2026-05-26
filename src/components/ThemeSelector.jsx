@@ -1,5 +1,6 @@
 import React from 'react';
 import { Palette, Check } from 'lucide-react';
+import { useTranslation } from '../utils/i18n';
 
 export const THEMES = [
   { id: 'carbon', name: 'carbon', colors: { bg: '#2f343f', main: '#e2b714', text: '#d1d0c5' } },
@@ -10,7 +11,9 @@ export const THEMES = [
   { id: 'laserwave', name: 'laserwave', colors: { bg: '#1b103c', main: '#ffe261', text: '#b388ff' } }
 ];
 
-export default function ThemeSelector({ activeTheme, setTheme, inline = false }) {
+export default function ThemeSelector({ activeTheme, setTheme, inline = false, language = 'english' }) {
+  const t = useTranslation(language);
+
   if (inline) {
     return (
       <div className="flex flex-wrap gap-2 items-center justify-center">
@@ -44,7 +47,7 @@ export default function ThemeSelector({ activeTheme, setTheme, inline = false })
       
       {/* Dropdown panel */}
       <div className="absolute bottom-full right-0 mb-2 w-48 glass rounded-lg shadow-xl border border-sub/20 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50 p-2 flex flex-col gap-1">
-        <div className="text-[10px] uppercase font-bold text-sub px-2 py-1 mb-1 tracking-wider border-b border-sub/10">Select Theme</div>
+        <div className="text-[10px] uppercase font-bold text-sub px-2 py-1 mb-1 tracking-wider border-b border-sub/10">{t.selectTheme}</div>
         {THEMES.map((theme) => (
           <button
             key={theme.id}
