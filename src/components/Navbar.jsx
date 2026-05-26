@@ -76,7 +76,7 @@ export default function Navbar({ config, setConfig, activeView, setActiveView, h
                         <Keyboard size={20} className="group-hover:rotate-6 transition-transform" />
                     </div>
                     <span className="font-mono font-black text-xl sm:text-2xl tracking-tight text-txt">
-                        mengetixs<span className="text-main">.</span>
+                        mengetype<span className="text-main">.</span>
                     </span>
                 </div>
 

@@ -9,16 +9,16 @@ import ClickSpark from './components/ClickSpark';
 
 function App() {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('mengetixs-theme') || 'carbon';
+    return localStorage.getItem('mengetype-theme') || 'carbon';
   });
 
   const [soundEnabled, setSoundEnabled] = useState(() => {
-    const saved = localStorage.getItem('mengetixs-sound');
+    const saved = localStorage.getItem('mengetype-sound');
     return saved !== null ? JSON.parse(saved) : true;
   });
 
   const [config, setConfig] = useState(() => {
-    const saved = localStorage.getItem('mengetixs-config');
+    const saved = localStorage.getItem('mengetype-config');
     return saved ? JSON.parse(saved) : { modeType: 'time', modeValue: 30, language: 'indonesian' };
   });
 
@@ -27,21 +27,21 @@ function App() {
   const [testStats, setTestStats] = useState(null);
 
   const [history, setHistory] = useState(() => {
-    const saved = localStorage.getItem('mengetixs-history');
+    const saved = localStorage.getItem('mengetype-history');
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('mengetixs-theme', theme);
+    localStorage.setItem('mengetype-theme', theme);
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem('mengetixs-sound', JSON.stringify(soundEnabled));
+    localStorage.setItem('mengetype-sound', JSON.stringify(soundEnabled));
   }, [soundEnabled]);
 
   useEffect(() => {
-    localStorage.setItem('mengetixs-config', JSON.stringify(config));
+    localStorage.setItem('mengetype-config', JSON.stringify(config));
   }, [config]);
 
   const handleTestComplete = (stats) => {
@@ -60,13 +60,13 @@ function App() {
 
     const nextHistory = [...history, newRecord];
     setHistory(nextHistory);
-    localStorage.setItem('mengetixs-history', JSON.stringify(nextHistory));
+    localStorage.setItem('mengetype-history', JSON.stringify(nextHistory));
     setActiveView('results');
   };
 
   const clearHistory = () => {
     setHistory([]);
-    localStorage.removeItem('mengetixs-history');
+    localStorage.removeItem('mengetype-history');
   };
 
   const handleRestart = () => {
