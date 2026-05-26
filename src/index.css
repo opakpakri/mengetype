@@ -1,1 +1,161 @@
 @import "tailwindcss";
+
+:root {
+  /* Carbon Theme (Default) */
+  --bg-color: #2f343f;
+  --main-color: #e2b714;
+  --sub-color: #646669;
+  --text-color: #d1d0c5;
+  --error-color: #ca4754;
+  --error-bg-color: rgba(202, 71, 84, 0.15);
+  --caret-color: #e2b714;
+}
+
+[data-theme="terminal"] {
+  --bg-color: #111111;
+  --main-color: #15ff00;
+  --sub-color: #496b4b;
+  --text-color: #e0ffe0;
+  --error-color: #ff5f5f;
+  --error-bg-color: rgba(255, 95, 95, 0.15);
+  --caret-color: #15ff00;
+}
+
+[data-theme="sakura"] {
+  --bg-color: #f5e6e8;
+  --main-color: #e86f88;
+  --sub-color: #a38a90;
+  --text-color: #5e4b50;
+  --error-color: #bf4343;
+  --error-bg-color: rgba(191, 67, 67, 0.15);
+  --caret-color: #e86f88;
+}
+
+[data-theme="nord"] {
+  --bg-color: #2e3440;
+  --main-color: #88c0d0;
+  --sub-color: #4c566a;
+  --text-color: #d8dee9;
+  --error-color: #bf616a;
+  --error-bg-color: rgba(191, 97, 106, 0.15);
+  --caret-color: #88c0d0;
+}
+
+[data-theme="cyberpunk"] {
+  --bg-color: #181824;
+  --main-color: #ff2a74;
+  --sub-color: #60627a;
+  --text-color: #00f0ff;
+  --error-color: #ffd300;
+  --error-bg-color: rgba(255, 211, 0, 0.15);
+  --caret-color: #ff2a74;
+}
+
+[data-theme="laserwave"] {
+  --bg-color: #1b103c;
+  --main-color: #ffe261;
+  --sub-color: #7458ad;
+  --text-color: #b388ff;
+  --error-color: #ff60b5;
+  --error-bg-color: rgba(255, 96, 181, 0.15);
+  --caret-color: #ffe261;
+}
+
+@theme {
+  --color-bg: var(--bg-color);
+  --color-main: var(--main-color);
+  --color-sub: var(--sub-color);
+  --color-txt: var(--text-color);
+  --color-err: var(--error-color);
+  --color-err-bg: var(--error-bg-color);
+  --color-caret: var(--caret-color);
+  
+  --font-sans: 'Lexend Deca', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+/* Base resets & theme styles */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Lexend Deca', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Caret blinking animation */
+@keyframes caretBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret-blink {
+  animation: caretBlink 1s infinite;
+}
+
+/* Custom scrollbar matching active theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sub-color);
+  border-radius: 3px;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color);
+}
+
+/* Typing words styles */
+.word-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  user-select: none;
+  font-family: 'Space Mono', monospace;
+}
+
+.letter {
+  transition: color 0.05s ease, border-color 0.05s ease;
+}
+
+.letter.untyped {
+  color: var(--sub-color);
+}
+
+.letter.correct {
+  color: var(--text-color);
+}
+
+.letter.incorrect {
+  color: var(--error-color);
+  border-bottom: 2px solid var(--error-color);
+}
+
+.letter.extra {
+  color: var(--error-color);
+  opacity: 0.8;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Theme selector dynamic animation */
+.theme-option {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
