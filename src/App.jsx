@@ -5,6 +5,8 @@ import TypingTest from './components/TypingTest';
 import Results from './components/Results';
 import StatsHistory from './components/StatsHistory';
 
+import ClickSpark from './components/ClickSpark';
+
 function App() {
   // 1. Theme configuration state
   const [theme, setTheme] = useState(() => {
@@ -85,7 +87,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col transition-colors duration-300 px-4 md:px-8">
+    <ClickSpark
+      sparkColor="var(--main-color)"
+      sparkSize={12}
+      sparkRadius={20}
+      sparkCount={8}
+      duration={400}
+    >
       {/* Navigation Header */}
       <Navbar 
         config={config} 
@@ -131,7 +139,7 @@ function App() {
 
       {/* Footer Branding & Quick Palette Toggles */}
       <Footer activeTheme={theme} setTheme={setTheme} language={config.language} />
-    </div>
+    </ClickSpark>
   );
 }
 
