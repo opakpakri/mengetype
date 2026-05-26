@@ -11,13 +11,13 @@ export default function Footer({ activeTheme, setTheme, language = 'english' }) 
 
             <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
                 <a
-                    href="https://github.com/opakpakri/mengetixs"
+                    href="https://opakptw.vercel.app"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 hover:text-txt transition-colors"
                 >
                     <Globe size={14} />
-                    <span>github</span>
+                    <span>opakptw</span>
                 </a>
                 <span className="hidden sm:inline text-sub/20">|</span>
                 <div className="flex items-center gap-1.5">
