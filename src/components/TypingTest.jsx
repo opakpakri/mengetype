@@ -298,55 +298,6 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
 
 
 
-  const processNewCharacters = (oldVal, newVal, targetWord) => {
-    let newCorrect = correctKeyStrokes;
-    let newIncorrect = incorrectKeyStrokes;
-    let newExtra = extraCharsCount;
-    let newErrorsSec = errorsThisSecond;
-    let soundToPlay = null;
-
-    for (let i = oldVal.length; i < newVal.length; i++) {
-      const typedChar = newVal[i];
-      const targetChar = targetWord[i];
-
-      if (typedChar === targetChar) {
-        newCorrect++;
-        soundToPlay = 'click';
-      } else {
-        newIncorrect++;
-        newErrorsSec++;
-        soundToPlay = 'error';
-
-        if (i >= targetWord.length) {
-          newExtra++;
-        }
-      }
-    }
-
-    if (newCorrect !== correctKeyStrokes) {
-      setCorrectKeyStrokes(newCorrect);
-      correctKeyStrokesRef.current = newCorrect;
-    }
-    if (newIncorrect !== incorrectKeyStrokes) {
-      setIncorrectKeyStrokes(newIncorrect);
-      incorrectKeyStrokesRef.current = newIncorrect;
-    }
-    if (newExtra !== extraCharsCount) {
-      setExtraCharsCount(newExtra);
-      extraCharsCountRef.current = newExtra;
-    }
-    if (newErrorsSec !== errorsThisSecond) {
-      setErrorsThisSecond(newErrorsSec);
-      errorsThisSecondRef.current = newErrorsSec;
-    }
-
-    if (soundToPlay === 'click') {
-      playClick();
-    } else if (soundToPlay === 'error') {
-      playError();
-    }
-  };
-
   const handleInputChange = (e) => {
     const val = e.target.value;
 
@@ -354,79 +305,45 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       setIsActive(true);
     }
 
-    const expectedPrefix = typedWords.length > 0 ? typedWords.join(' ') + ' ' : '';
-
-    // Check if the user backspaced into the previous word (val is shorter than prefix + space)
-    if (expectedPrefix && !val.startsWith(expectedPrefix)) {
-      const prevWordIndex = currentWordIndex - 1;
-
-      const nextTypedWords = typedWords.slice(0, -1);
-      setTypedWords(nextTypedWords);
-      setCurrentWordIndex(prevWordIndex);
-
-      const newPrefix = nextTypedWords.length > 0 ? nextTypedWords.join(' ') + ' ' : '';
-      const cleanVal = val.slice(newPrefix.length);
-
-      setCurrentInput(cleanVal);
-      currentInputRef.current = cleanVal;
-      return;
-    }
-
-    const currentWordInput = val.slice(expectedPrefix.length);
     const currentWord = activeWordsList[currentWordIndex] || '';
 
-    // Check if the current word input ends with a space (word transition)
-    if (currentWordInput.endsWith(' ')) {
-      const cleanVal = currentWordInput.slice(0, -1);
+    if (val.length > currentInput.length) {
+      const typedChar = val[val.length - 1];
+      const targetChar = currentWord[val.length - 1];
 
-      if (cleanVal === '' && currentWordInput === ' ') {
-        // Just extra space typed at the beginning of the word, ignore it
-        if (inputRef.current) {
-          inputRef.current.value = expectedPrefix;
-        }
-        return;
-      }
-
-      // Process any new characters in cleanVal that were not in currentInput
-      if (cleanVal.length > currentInput.length) {
-        processNewCharacters(currentInput, cleanVal, currentWord);
-      }
-
-      const currentWordText = activeWordsList[currentWordIndex] || '';
-
-      if (cleanVal.length < currentWordText.length) {
-        const missed = currentWordText.length - cleanVal.length;
-        setMissedCharsCount(prev => prev + missed);
-      }
-
-      const nextTypedWords = [...typedWords, cleanVal];
-      setTypedWords(nextTypedWords);
-
-      const nextWordIndex = currentWordIndex + 1;
-
-      if (modeType === 'words' && nextWordIndex >= modeValue) {
-        const finalTime = timeSpentRef.current || 1;
-        finalizeStats(finalTime, cleanVal);
+      if (typedChar === targetChar) {
+        const nextCorrect = correctKeyStrokes + 1;
+        setCorrectKeyStrokes(nextCorrect);
+        correctKeyStrokesRef.current = nextCorrect;
+        playClick();
       } else {
-        setCurrentWordIndex(nextWordIndex);
-        setCurrentInput('');
+        const nextIncorrect = incorrectKeyStrokes + 1;
+        setIncorrectKeyStrokes(nextIncorrect);
+        incorrectKeyStrokesRef.current = nextIncorrect;
+
+        setErrorsThisSecond(prev => {
+          const nextErrors = prev + 1;
+          errorsThisSecondRef.current = nextErrors;
+          return nextErrors;
+        });
+        playError();
+
+        if (val.length > currentWord.length) {
+          const nextExtra = extraCharsCount + 1;
+          setExtraCharsCount(nextExtra);
+          extraCharsCountRef.current = nextExtra;
+        }
       }
-      return;
     }
 
-    // Process normal characters (non-space)
-    if (currentWordInput.length > currentInput.length) {
-      processNewCharacters(currentInput, currentWordInput, currentWord);
-    }
-
-    setCurrentInput(currentWordInput);
-    currentInputRef.current = currentWordInput;
+    setCurrentInput(val);
+    currentInputRef.current = val;
 
     if (modeType === 'words' && currentWordIndex === modeValue - 1) {
-      if (currentWordInput.length === currentWord.length) {
+      if (val.length === currentWord.length) {
         setIsActive(false);
         const finalTime = timeSpentRef.current || 1;
-        finalizeStats(finalTime, currentWordInput);
+        finalizeStats(finalTime, val);
       }
     }
   };
@@ -436,6 +353,51 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       e.preventDefault();
       initializeTest();
       return;
+    }
+
+    if (e.key === ' ') {
+      e.preventDefault();
+      if (currentInput.trim() === '') return;
+
+      const currentWordText = activeWordsList[currentWordIndex] || '';
+
+      if (currentInput.length < currentWordText.length) {
+        const missed = currentWordText.length - currentInput.length;
+        setMissedCharsCount(prev => prev + missed);
+      }
+
+      const nextTypedWords = [...typedWords, currentInput];
+      setTypedWords(nextTypedWords);
+
+      const nextWordIndex = currentWordIndex + 1;
+
+      if (modeType === 'words' && nextWordIndex >= modeValue) {
+        const finalTime = timeSpent || 1;
+        finalizeStats(finalTime);
+      } else {
+        setCurrentWordIndex(nextWordIndex);
+        setCurrentInput('');
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+      return;
+    }
+
+    if (e.key === 'Backspace' && currentInput === '' && currentWordIndex > 0) {
+      e.preventDefault();
+      const prevWordIndex = currentWordIndex - 1;
+
+      const prevTypedWordText = typedWords[prevWordIndex] || '';
+      const prevWordText = activeWordsList[prevWordIndex] || '';
+
+      setCurrentWordIndex(prevWordIndex);
+      setCurrentInput(prevTypedWordText);
+      setTypedWords(prev => prev.slice(0, -1));
+
+      if (inputRef.current) {
+        inputRef.current.value = prevTypedWordText;
+      }
     }
   };
 
