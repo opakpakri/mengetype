@@ -4,9 +4,6 @@ import { generateWords } from '../utils/words';
 import { useSound } from '../hooks/useSound';
 import { useTranslation } from '../utils/i18n';
 
-const isMobile = typeof navigator !== 'undefined' && 
-  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
 export default function TypingTest({ config, onTestComplete, soundEnabled, setSoundEnabled }) {
   const { modeType, modeValue, language } = config;
   const t = useTranslation(language);
@@ -357,18 +354,35 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       setIsActive(true);
     }
 
+    const expectedPrefix = typedWords.length > 0 ? typedWords.join(' ') + ' ' : '';
+
+    // Check if the user backspaced into the previous word (val is shorter than prefix + space)
+    if (expectedPrefix && !val.startsWith(expectedPrefix)) {
+      const prevWordIndex = currentWordIndex - 1;
+
+      const nextTypedWords = typedWords.slice(0, -1);
+      setTypedWords(nextTypedWords);
+      setCurrentWordIndex(prevWordIndex);
+
+      const newPrefix = nextTypedWords.length > 0 ? nextTypedWords.join(' ') + ' ' : '';
+      const cleanVal = val.slice(newPrefix.length);
+
+      setCurrentInput(cleanVal);
+      currentInputRef.current = cleanVal;
+      return;
+    }
+
+    const currentWordInput = val.slice(expectedPrefix.length);
     const currentWord = activeWordsList[currentWordIndex] || '';
 
-    // Check if the input ends with a space (common on mobile keyboards)
-    if (val.endsWith(' ')) {
-      const cleanVal = val.slice(0, -1);
-      
-      if (cleanVal === '') {
-        // Just empty space (e.g. at the start of a word), clear input
-        setCurrentInput('');
-        currentInputRef.current = '';
+    // Check if the current word input ends with a space (word transition)
+    if (currentWordInput.endsWith(' ')) {
+      const cleanVal = currentWordInput.slice(0, -1);
+
+      if (cleanVal === '' && currentWordInput === ' ') {
+        // Just extra space typed at the beginning of the word, ignore it
         if (inputRef.current) {
-          inputRef.current.value = '';
+          inputRef.current.value = expectedPrefix;
         }
         return;
       }
@@ -396,33 +410,23 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       } else {
         setCurrentWordIndex(nextWordIndex);
         setCurrentInput('');
-        if (inputRef.current) {
-          // Defer clearing the input value using a timeout with a validation guard.
-          // This allows Android Gboard to complete its composition commit naturally.
-          const valAtCompletion = val;
-          setTimeout(() => {
-            if (inputRef.current && inputRef.current.value === valAtCompletion) {
-              inputRef.current.value = '';
-            }
-          }, 20);
-        }
       }
       return;
     }
 
     // Process normal characters (non-space)
-    if (val.length > currentInput.length) {
-      processNewCharacters(currentInput, val, currentWord);
+    if (currentWordInput.length > currentInput.length) {
+      processNewCharacters(currentInput, currentWordInput, currentWord);
     }
 
-    setCurrentInput(val);
-    currentInputRef.current = val;
+    setCurrentInput(currentWordInput);
+    currentInputRef.current = currentWordInput;
 
     if (modeType === 'words' && currentWordIndex === modeValue - 1) {
-      if (val.length === currentWord.length) {
+      if (currentWordInput.length === currentWord.length) {
         setIsActive(false);
         const finalTime = timeSpentRef.current || 1;
-        finalizeStats(finalTime, val);
+        finalizeStats(finalTime, currentWordInput);
       }
     }
   };
@@ -432,52 +436,6 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       e.preventDefault();
       initializeTest();
       return;
-    }
-
-    // Only handle spacebar via keydown on desktop. Mobile/IME uses handleInputChange.
-    if (e.key === ' ' && !isMobile) {
-      e.preventDefault();
-      if (currentInput.trim() === '') return;
-
-      const currentWordText = activeWordsList[currentWordIndex] || '';
-
-      if (currentInput.length < currentWordText.length) {
-        const missed = currentWordText.length - currentInput.length;
-        setMissedCharsCount(prev => prev + missed);
-      }
-
-      const nextTypedWords = [...typedWords, currentInput];
-      setTypedWords(nextTypedWords);
-
-      const nextWordIndex = currentWordIndex + 1;
-
-      if (modeType === 'words' && nextWordIndex >= modeValue) {
-        const finalTime = timeSpent || 1;
-        finalizeStats(finalTime);
-      } else {
-        setCurrentWordIndex(nextWordIndex);
-        setCurrentInput('');
-        if (inputRef.current) {
-          inputRef.current.value = '';
-        }
-      }
-      return;
-    }
-
-    if (e.key === 'Backspace' && currentInput === '' && currentWordIndex > 0) {
-      e.preventDefault();
-      const prevWordIndex = currentWordIndex - 1;
-
-      const prevTypedWordText = typedWords[prevWordIndex] || '';
-      const prevWordText = activeWordsList[prevWordIndex] || '';
-
-      setCurrentWordIndex(prevWordIndex);
-      setCurrentInput(prevTypedWordText);
-      setTypedWords(prev => prev.slice(0, -1));
-
-      if (inputRef.current) {
-        inputRef.current.value = prevTypedWordText;
-      }
     }
   };
 
