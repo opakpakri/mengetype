@@ -4,6 +4,9 @@ import { generateWords } from '../utils/words';
 import { useSound } from '../hooks/useSound';
 import { useTranslation } from '../utils/i18n';
 
+const isMobile = typeof navigator !== 'undefined' && 
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 export default function TypingTest({ config, onTestComplete, soundEnabled, setSoundEnabled }) {
   const { modeType, modeValue, language } = config;
   const t = useTranslation(language);
@@ -394,7 +397,14 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
         setCurrentWordIndex(nextWordIndex);
         setCurrentInput('');
         if (inputRef.current) {
-          inputRef.current.value = '';
+          // Defer clearing the input value using a timeout with a validation guard.
+          // This allows Android Gboard to complete its composition commit naturally.
+          const valAtCompletion = val;
+          setTimeout(() => {
+            if (inputRef.current && inputRef.current.value === valAtCompletion) {
+              inputRef.current.value = '';
+            }
+          }, 20);
         }
       }
       return;
@@ -424,7 +434,8 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       return;
     }
 
-    if (e.key === ' ') {
+    // Only handle spacebar via keydown on desktop. Mobile/IME uses handleInputChange.
+    if (e.key === ' ' && !isMobile) {
       e.preventDefault();
       if (currentInput.trim() === '') return;
 
