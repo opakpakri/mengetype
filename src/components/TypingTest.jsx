@@ -298,6 +298,55 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
 
 
 
+  const processNewCharacters = (oldVal, newVal, targetWord) => {
+    let newCorrect = correctKeyStrokes;
+    let newIncorrect = incorrectKeyStrokes;
+    let newExtra = extraCharsCount;
+    let newErrorsSec = errorsThisSecond;
+    let soundToPlay = null;
+
+    for (let i = oldVal.length; i < newVal.length; i++) {
+      const typedChar = newVal[i];
+      const targetChar = targetWord[i];
+
+      if (typedChar === targetChar) {
+        newCorrect++;
+        soundToPlay = 'click';
+      } else {
+        newIncorrect++;
+        newErrorsSec++;
+        soundToPlay = 'error';
+
+        if (i >= targetWord.length) {
+          newExtra++;
+        }
+      }
+    }
+
+    if (newCorrect !== correctKeyStrokes) {
+      setCorrectKeyStrokes(newCorrect);
+      correctKeyStrokesRef.current = newCorrect;
+    }
+    if (newIncorrect !== incorrectKeyStrokes) {
+      setIncorrectKeyStrokes(newIncorrect);
+      incorrectKeyStrokesRef.current = newIncorrect;
+    }
+    if (newExtra !== extraCharsCount) {
+      setExtraCharsCount(newExtra);
+      extraCharsCountRef.current = newExtra;
+    }
+    if (newErrorsSec !== errorsThisSecond) {
+      setErrorsThisSecond(newErrorsSec);
+      errorsThisSecondRef.current = newErrorsSec;
+    }
+
+    if (soundToPlay === 'click') {
+      playClick();
+    } else if (soundToPlay === 'error') {
+      playError();
+    }
+  };
+
   const handleInputChange = (e) => {
     const val = e.target.value;
 
@@ -307,33 +356,53 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
 
     const currentWord = activeWordsList[currentWordIndex] || '';
 
-    if (val.length > currentInput.length) {
-      const typedChar = val[val.length - 1];
-      const targetChar = currentWord[val.length - 1];
+    // Check if the input ends with a space (common on mobile keyboards)
+    if (val.endsWith(' ')) {
+      const cleanVal = val.slice(0, -1);
+      
+      if (cleanVal === '') {
+        // Just empty space (e.g. at the start of a word), clear input
+        setCurrentInput('');
+        currentInputRef.current = '';
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+        return;
+      }
 
-      if (typedChar === targetChar) {
-        const nextCorrect = correctKeyStrokes + 1;
-        setCorrectKeyStrokes(nextCorrect);
-        correctKeyStrokesRef.current = nextCorrect;
-        playClick();
+      // Process any new characters in cleanVal that were not in currentInput
+      if (cleanVal.length > currentInput.length) {
+        processNewCharacters(currentInput, cleanVal, currentWord);
+      }
+
+      const currentWordText = activeWordsList[currentWordIndex] || '';
+
+      if (cleanVal.length < currentWordText.length) {
+        const missed = currentWordText.length - cleanVal.length;
+        setMissedCharsCount(prev => prev + missed);
+      }
+
+      const nextTypedWords = [...typedWords, cleanVal];
+      setTypedWords(nextTypedWords);
+
+      const nextWordIndex = currentWordIndex + 1;
+
+      if (modeType === 'words' && nextWordIndex >= modeValue) {
+        const finalTime = timeSpentRef.current || 1;
+        finalizeStats(finalTime, cleanVal);
       } else {
-        const nextIncorrect = incorrectKeyStrokes + 1;
-        setIncorrectKeyStrokes(nextIncorrect);
-        incorrectKeyStrokesRef.current = nextIncorrect;
-
-        setErrorsThisSecond(prev => {
-          const nextErrors = prev + 1;
-          errorsThisSecondRef.current = nextErrors;
-          return nextErrors;
-        });
-        playError();
-
-        if (val.length > currentWord.length) {
-          const nextExtra = extraCharsCount + 1;
-          setExtraCharsCount(nextExtra);
-          extraCharsCountRef.current = nextExtra;
+        setCurrentWordIndex(nextWordIndex);
+        setCurrentInput('');
+        if (inputRef.current) {
+          inputRef.current.value = '';
         }
       }
+      return;
+    }
+
+    // Process normal characters (non-space)
+    if (val.length > currentInput.length) {
+      processNewCharacters(currentInput, val, currentWord);
     }
 
     setCurrentInput(val);
