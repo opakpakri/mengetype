@@ -6,6 +6,7 @@ import Results from './components/Results';
 import StatsHistory from './components/StatsHistory';
 
 import ClickSpark from './components/ClickSpark';
+import { Monitor } from 'lucide-react';
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -82,48 +83,69 @@ function App() {
       sparkCount={8}
       duration={400}
     >
-      <Navbar
-        config={config}
-        setConfig={setConfig}
-        activeView={activeView}
-        setActiveView={(view) => {
-          setActiveView(view);
-          if (view === 'test') handleRestart();
-        }}
-        historyCount={history.length}
-        isTesting={activeView === 'test' && testStats === null && false}
-      />
+      {/* Mobile Blocker Screen */}
+      <div className="md:hidden flex flex-col items-center justify-center p-6 text-center select-none font-mono flex-1 my-auto animate-fadeIn">
+        <div className="w-16 h-16 rounded-2xl bg-main/10 text-main flex items-center justify-center border border-main/20 mb-6 animate-bounce">
+          <Monitor size={32} />
+        </div>
+        <h1 className="font-bold text-2xl text-txt mb-3">
+          {config.language === 'indonesian' ? 'Akses Mobile Ditutup' : 'Mobile Access Unavailable'}
+        </h1>
+        <p className="text-sm text-sub max-w-xs leading-relaxed mb-6">
+          {config.language === 'indonesian' 
+            ? 'Mohon maaf atas ketidaknyamanannya. Untuk saat ini Mengetype hanya dapat diakses melalui komputer atau laptop agar Anda mendapatkan pengalaman mengetik yang maksimal.' 
+            : 'We apologize for the inconvenience. For now, Mengetype can only be accessed using a computer or laptop to ensure you get the best typing experience.'}
+        </p>
+        <div className="text-[11px] tracking-wider text-main/80 border border-main/20 px-3.5 py-2 rounded-lg bg-main/5 font-semibold uppercase">
+          {config.language === 'indonesian' ? 'Gunakan PC / Laptop' : 'Use PC / Laptop'}
+        </div>
+      </div>
 
-      <main className="flex-1 flex items-center justify-center py-8 md:py-12">
-        {activeView === 'test' && (
-          <TypingTest
-            config={config}
-            soundEnabled={soundEnabled}
-            setSoundEnabled={setSoundEnabled}
-            onTestComplete={handleTestComplete}
-          />
-        )}
+      {/* Main Desktop Layout */}
+      <div className="hidden md:flex flex-col flex-1">
+        <Navbar
+          config={config}
+          setConfig={setConfig}
+          activeView={activeView}
+          setActiveView={(view) => {
+            setActiveView(view);
+            if (view === 'test') handleRestart();
+          }}
+          historyCount={history.length}
+          isTesting={activeView === 'test' && testStats === null && false}
+        />
 
-        {activeView === 'results' && testStats && (
-          <Results
-            stats={testStats}
-            onRestart={handleRestart}
-            activeTheme={theme}
-            language={config.language}
-          />
-        )}
+        <main className="flex-1 flex items-center justify-center py-8 md:py-12">
+          {activeView === 'test' && (
+            <TypingTest
+              config={config}
+              soundEnabled={soundEnabled}
+              setSoundEnabled={setSoundEnabled}
+              onTestComplete={handleTestComplete}
+            />
+          )}
 
-        {activeView === 'history' && (
-          <StatsHistory
-            history={history}
-            clearHistory={clearHistory}
-            onClose={handleRestart}
-            language={config.language}
-          />
-        )}
-      </main>
+          {activeView === 'results' && testStats && (
+            <Results
+              stats={testStats}
+              onRestart={handleRestart}
+              activeTheme={theme}
+              language={config.language}
+            />
+          )}
 
-      <Footer activeTheme={theme} setTheme={setTheme} language={config.language} />
+          {activeView === 'history' && (
+            <StatsHistory
+              history={history}
+              clearHistory={clearHistory}
+              onClose={handleRestart}
+              language={config.language}
+            />
+          )}
+        </main>
+
+        <Footer activeTheme={theme} setTheme={setTheme} language={config.language} />
+      </div>
     </ClickSpark>
   );
 }
