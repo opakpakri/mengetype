@@ -60,7 +60,7 @@ Ensure you have [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended) i
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/opakpakri/mengetype
+git clone https://github.com/opakpakri/mengetype.git
 cd mengetixs
 ```
 
