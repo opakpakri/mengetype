@@ -490,9 +490,9 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
             className={`absolute bg-main rounded z-10 ${currentInput.length === 0 ? 'caret-blink' : ''}`}
             style={{
               transform: 'translate3d(0, 2px, 0)',
-              width: '2.5px',
+              width: '1.5px',
               backgroundColor: 'var(--caret-color)',
-              transition: 'transform 0.08s cubic-bezier(0.2, 1, 0.2, 1), height 0.08s ease-out'
+              transition: 'transform 0.06s ease-out, height 0.06s ease-out'
             }}
           />
 
