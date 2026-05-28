@@ -35,7 +35,7 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
   const wordRefs = useRef({});
 
   const initializeTest = () => {
-    const wordCount = modeType === 'words' ? modeValue : 1000;
+    const wordCount = modeType === 'words' ? modeValue : 5000;
     const words = generateWords(wordCount, language);
     setActiveWordsList(words);
     setCurrentWordIndex(0);
