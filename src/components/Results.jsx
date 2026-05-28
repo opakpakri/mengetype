@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RotateCcw, AlertTriangle, Award, Flame, ThumbsUp, Calendar } from 'lucide-react';
 import { useTranslation } from '../utils/i18n';
 
@@ -17,6 +17,26 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
   } = stats;
 
   const [hoveredPoint, setHoveredPoint] = useState(null);
+  const [isRestartFocused, setIsRestartFocused] = useState(false);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        setIsRestartFocused(true);
+      } else if (e.key === 'Enter') {
+        if (isRestartFocused) {
+          e.preventDefault();
+          onRestart();
+        }
+      } else {
+        setIsRestartFocused(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [isRestartFocused, onRestart]);
 
   const chartWidth = 700;
   const chartHeight = 200;
@@ -300,11 +320,17 @@ export default function Results({ stats, onRestart, activeTheme, language = 'eng
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
         <button
           onClick={onRestart}
-          className="flex items-center justify-center gap-2.5 px-6 py-3.5 bg-main text-bg font-bold rounded-xl hover:opacity-95 active:scale-98 transition-all cursor-pointer shadow-md shadow-main/10 text-sm group font-sans"
+          className={`flex items-center justify-center gap-2.5 px-6 py-3.5 bg-main text-bg font-bold rounded-xl active:scale-98 transition-all cursor-pointer shadow-md shadow-main/10 text-sm group font-sans ${
+            isRestartFocused ? 'ring-4 ring-main/30 scale-102 opacity-95' : 'hover:opacity-95'
+          }`}
         >
-          <RotateCcw size={16} className="group-hover:rotate-45 transition-transform" />
+          <RotateCcw size={16} className={`group-hover:rotate-45 transition-transform ${isRestartFocused ? 'rotate-180' : ''}`} />
           <span>{t.repeatAction}</span>
-          <span className="text-[10px] bg-bg/20 text-bg/90 px-1.5 py-0.5 rounded ml-1.5 font-mono font-medium">Tab</span>
+          <div className="flex items-center gap-0.5 bg-bg/25 text-bg/90 px-2 py-0.5 rounded-md ml-1.5 font-mono text-[9px] font-bold">
+            <span>Tab</span>
+            <span>+</span>
+            <span>Enter</span>
+          </div>
         </button>
       </div>
     </div>

@@ -18,6 +18,7 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
   const [timeLeft, setTimeLeft] = useState(modeType === 'time' ? modeValue : 0);
   const [timeSpent, setTimeSpent] = useState(0);
   const [isFocused, setIsFocused] = useState(true);
+  const [isRestartFocused, setIsRestartFocused] = useState(false);
 
   const [correctKeyStrokes, setCorrectKeyStrokes] = useState(0);
   const [incorrectKeyStrokes, setIncorrectKeyStrokes] = useState(0);
@@ -351,8 +352,21 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
   const handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
-      initializeTest();
+      setIsRestartFocused(true);
       return;
+    }
+
+    if (e.key === 'Enter') {
+      if (isRestartFocused) {
+        e.preventDefault();
+        setIsRestartFocused(false);
+        initializeTest();
+        return;
+      }
+    }
+
+    if (isRestartFocused && e.key !== 'Tab') {
+      setIsRestartFocused(false);
     }
 
     if (e.key === ' ') {
@@ -438,11 +452,16 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
             {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
           </button>
           <button
-            onClick={initializeTest}
-            className="p-1.5 rounded hover:bg-sub/10 text-sub hover:text-txt cursor-pointer transition-colors"
+            onClick={() => {
+              setIsRestartFocused(false);
+              initializeTest();
+            }}
+            className={`p-1.5 rounded hover:bg-sub/10 text-sub hover:text-txt cursor-pointer transition-all duration-200 ${
+              isRestartFocused ? 'bg-main/20 text-main ring-2 ring-main outline-none' : ''
+            }`}
             title={t.resetTest}
           >
-            <RefreshCw size={16} />
+            <RefreshCw size={16} className={isRestartFocused ? 'rotate-180 transition-transform duration-300' : ''} />
           </button>
         </div>
       </div>
@@ -530,8 +549,12 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
       </div>
 
       <div className="w-full flex items-center justify-center gap-2 mt-6 text-xs text-sub select-none font-mono">
-        <kbd className="px-1.5 py-0.5 rounded bg-sub/10 border border-sub/20 font-bold">{t.tabKey}</kbd>
-        <span>{t.restartTip}</span>
+        <div className="flex items-center gap-1.5 bg-sub/5 border border-sub/10 px-3 py-1.5 rounded-lg shadow-xs">
+          <kbd className="px-1.5 py-0.5 rounded bg-sub/10 border border-sub/20 font-bold text-main">Tab</kbd>
+          <span className="text-sub font-semibold">+</span>
+          <kbd className="px-1.5 py-0.5 rounded bg-sub/10 border border-sub/20 font-bold text-main">Enter</kbd>
+          <span className="ml-1 text-sub">{t.restartTip}</span>
+        </div>
       </div>
     </div>
   );
