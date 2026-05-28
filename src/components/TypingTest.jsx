@@ -483,17 +483,16 @@ export default function TypingTest({ config, onTestComplete, soundEnabled, setSo
 
         <div
           ref={wordsRef}
-          className="word-container relative pl-1 text-sub/50 transition-transform duration-300 ease-out"
+          className="word-container relative pl-1 text-sub/50 transition-transform duration-200 ease-out"
         >
           <div
             ref={caretRef}
-            className={`absolute w-[2px] bg-main rounded transition-all duration-75 z-10 ${currentInput.length === 0 ? 'caret-blink' : ''
-              }`}
+            className={`absolute bg-main rounded z-10 ${currentInput.length === 0 ? 'caret-blink' : ''}`}
             style={{
               transform: 'translate3d(0, 2px, 0)',
-              width: '2px',
+              width: '2.5px',
               backgroundColor: 'var(--caret-color)',
-              transition: 'transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), height 0.1s'
+              transition: 'transform 0.08s cubic-bezier(0.2, 1, 0.2, 1), height 0.08s ease-out'
             }}
           />
 
